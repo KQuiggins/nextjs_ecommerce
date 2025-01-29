@@ -1,0 +1,21 @@
+<svg
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 500 300"
+    width="500"
+    height="300">
+
+    <!-- Background Burst -->
+    <polygon points="250,10 270,80 350,90 280,130 300,200 250,160 200,200 220,130 150,90 230,80"
+        fill="#FFD700" stroke="#000" stroke-width="5"/>
+
+    <!-- Speech Bubble -->
+    <path d="M50,50 Q30,150 150,200 Q120,250 170,270 Q160,240 200,220 Q360,260 450,150 Q400,50 250,50 Z"
+        fill="white" stroke="black" stroke-width="5"/>
+
+    <!-- Text -->
+    <text x="140" y="140" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="black">
+        COMIC STORE
+    </text>
+
+</svg>
