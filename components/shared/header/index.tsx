@@ -16,9 +16,21 @@ const Header = () => {
               width={50}
               height={50}
               priority={true}
-              />
-              <span className="hidden lg:block text-2xl font-bold ml-3">{APP_NAME}</span>
+            />
+            <span className="hidden lg:block text-2xl font-bold ml-3">{APP_NAME}</span>
           </Link>
+        </div>
+        <div className="space-x-2">
+          <Button asChild variant="ghost">
+            <Link href="/cart">
+              <ShoppingCart /> Cart
+            </Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link href="/sign-in">
+              <UserIcon /> Sign In
+            </Link>
+          </Button>
         </div>
       </div>
     </header>
