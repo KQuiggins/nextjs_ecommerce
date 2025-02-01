@@ -1,6 +1,7 @@
 
 
-const HomePage = () => {
+const HomePage = async () => {
+
   return (
     <>Comic Store</>
   )
