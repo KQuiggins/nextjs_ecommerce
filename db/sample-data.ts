@@ -1,5 +1,5 @@
 const sampleData = {
-    products: [
+    comics: [
       {
         name: 'Batman: The Killing Joke',
         slug: 'batman-the-killing-joke',
