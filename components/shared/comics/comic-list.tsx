@@ -1,6 +1,6 @@
+import ComicCard from './comic-card'
 
-
-const ComicList = ({ data, title, limit }): { data: any; title?: string; limit?: number } => {
+const ComicList = ({ data, title, limit }: { data: any; title?: string; limit?: number }) => {
   const dataLimit = limit ? data.slice(0, limit): data
   return (
     <div className="my-10">
@@ -8,7 +8,7 @@ const ComicList = ({ data, title, limit }): { data: any; title?: string; limit?:
       { data.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
           {dataLimit.map((comic: any) => (
-           <div>{ comic.name }</div>
+            <ComicCard key={comic.slug} comic={comic} />
           ))}
         </div>
       ) : (

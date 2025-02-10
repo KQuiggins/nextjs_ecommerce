@@ -13,7 +13,7 @@ const sampleData = {
         brand: 'DC Comics',
         rating: 4.8,
         numReviews: 120,
-        stock: 15,
+        stock: 0,
         isFeatured: true,
         banner: 'banner-batman.jpg',
       },
