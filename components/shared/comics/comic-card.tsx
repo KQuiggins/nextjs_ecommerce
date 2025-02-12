@@ -1,10 +1,17 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import ComicPrice from './comic-price'
 
 const ComicCard = ({ comic }:{ comic: any }) => {
   return (
-    <Card>
+    <Card 
+      className="
+      transition-transform 
+      duration-300 
+      hover:scale-105 
+      hover:shadow-xl"
+      >
         <CardHeader>
             <Link href={`/comics/${comic.slug}`}>
                
@@ -27,7 +34,7 @@ const ComicCard = ({ comic }:{ comic: any }) => {
           <div className="flex-between gap-4">
             <p >{comic.rating} Stars</p> 
             { comic.stock > 0 ? (
-              <p className="font-bold">{ comic.price }</p>
+              <ComicPrice value={Number(comic.price)} />
             ): (
               <p className="text-red-500">Out of Stock</p>
             )}
