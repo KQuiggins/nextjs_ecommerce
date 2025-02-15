@@ -2,8 +2,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import ComicPrice from './comic-price'
+import { Comic } from '@/types'
 
-const ComicCard = ({ comic }:{ comic: any }) => {
+const ComicCard = ({ comic }:{ comic: Comic }) => {
   return (
     <Card 
       className="
