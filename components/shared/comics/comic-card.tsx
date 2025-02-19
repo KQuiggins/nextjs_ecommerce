@@ -14,7 +14,7 @@ const ComicCard = ({ comic }:{ comic: Comic }) => {
       hover:shadow-xl"
       >
         <CardHeader>
-            <Link href={`/comics/${comic.slug}`}>
+            <Link href={`/comic/${comic.slug}`}>
                
                 <Image
                     src={comic.images[0]}

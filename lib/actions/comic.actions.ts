@@ -15,3 +15,13 @@ export async function getLatestComics() {
   });
   return toJavaScriptObject(latestComics);
 }
+
+// Get comic by slug
+export async function getComicBySlug(slug: string) {
+  const comic = await prisma.comic.findUnique({
+    where: {
+      slug,
+    },
+  });
+  return toJavaScriptObject(comic);
+}
