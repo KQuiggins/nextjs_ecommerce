@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { getComicBySlug } from "@/lib/actions/comic.actions"
 import { notFound } from "next/navigation"
 import ComicPrice from "@/components/shared/comics/comic-price"
+import ComicImages  from "@/components/shared/comics/comic-images"
 
 const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params
@@ -16,7 +17,9 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
     <section>
       <div className="grid grid-cols-1 md:grid-cols-5">
         {/* Image Column */}
-        <div className="col-span-2">{/* Image Component */}</div>
+        <div className="col-span-2">
+          <ComicImages images={comic.images} />
+        </div>
         {/* Details Column */}
         <div className="col-span-2 p-5">
           <div className="flex flex-col gap-6">
