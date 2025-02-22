@@ -10,8 +10,8 @@ const NotFound = () => {
           Page Not Found!
         </h2>
         <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-          Oops! It looks like you've ventured off the page. The comic you're
-          looking for isn't here—maybe it's hiding behind a secret panel.
+          Oops! It looks like you&apos;ve ventured off the page. The comic you&apos;re
+          looking for isn&apos;t here—maybe it&apos;s hiding behind a secret panel.
         </p>
         <Link
           href="/"
