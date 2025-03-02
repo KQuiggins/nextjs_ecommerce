@@ -56,7 +56,7 @@ const CredentialsSignInForm = () => {
             id="name"
             name="name"
             type="text"
-            required
+           
             autoComplete="name"
             defaultValue={signUpDefaultValues.name}
             className="border-2 border-black bg-white/90 p-6 text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
@@ -70,7 +70,7 @@ const CredentialsSignInForm = () => {
             id="email"
             name="email"
             type="email"
-            required
+            
             autoComplete="email"
             defaultValue={signUpDefaultValues.email}
             className="border-2 border-black bg-white/90 p-6 text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
@@ -84,7 +84,7 @@ const CredentialsSignInForm = () => {
             id="password"
             name="password"
             type="password"
-            required
+          
             autoComplete="password"
             defaultValue={signUpDefaultValues.password}
             className="border-2 border-black bg-white/90 p-6 text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
@@ -98,7 +98,7 @@ const CredentialsSignInForm = () => {
             id="confirmPassword"
             name="confirmPassword"
             type="password"
-            required
+           
             autoComplete="confirmPassword"
             defaultValue={signUpDefaultValues.confirmPassword}
             className="border-2 border-black bg-white/90 p-6 text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
