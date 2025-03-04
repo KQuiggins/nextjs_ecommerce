@@ -1,15 +1,18 @@
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { getComicBySlug } from "@/lib/actions/comic.actions"
 import { notFound } from "next/navigation"
 import ComicPrice from "@/components/shared/comics/comic-price"
 import ComicImages  from "@/components/shared/comics/comic-images"
+import AddToCart from "@/components/shared/comics/add-to-cart"
 
 const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params
 
   const comic = await getComicBySlug(slug)
+  console.log(comic);
+  
   if (!comic) {
     notFound()
   }
@@ -54,12 +57,15 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
               </div>
               {comic.stock > 0 && (
                 <div className="flex-center">
-                  <Button
-                    className="w-full"
+                  <AddToCart item={{
+                    productId: comic.id,
+                    name: comic.name,
+                    slug: comic.slug,
+                    price: comic.price,
+                    qty: 1,
+                    image: comic.images![0],
                     
-                  >
-                    Add to Cart
-                  </Button>
+                  }} />
                 </div>
               )}
             </CardContent>
