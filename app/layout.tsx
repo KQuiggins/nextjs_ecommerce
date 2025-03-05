@@ -4,6 +4,9 @@ import "@/assets/styles/globals.css";
 import { APP_NAME, APP_DESCRIPTION, SERVER_URL } from "@/lib/constants";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/sonner";
+import '../node_modules/sonner/dist/styles.css';
+
+
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -32,8 +35,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-        {children}
-        <Toaster />
+          {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
