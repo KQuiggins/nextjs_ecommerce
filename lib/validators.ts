@@ -54,7 +54,7 @@ export const signUpFormSchema = z.object({
     shippingPrice: currency,
     taxPrice: currency,
     sessionCartId: z.string().min(1, "Session Cart ID must be at least 1 characters long"),
-    userID: z.string().optional().nullable(),
+    userId: z.string().optional().nullable(),
 });
 
   

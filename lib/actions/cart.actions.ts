@@ -4,8 +4,26 @@ import { cookies } from "next/headers"
 import { CartItem } from "@/types"
 import { auth } from "@/auth"
 import { prisma } from "@/db/prisma"
-import { toJavaScriptObject } from "../utils"
-import { cartItemSchema } from "../validators"
+import { formatErrors, roundTwoDecimalPlaces, toJavaScriptObject } from "../utils"
+import { cartItemSchema, insertCartSchema } from "../validators"
+import { revalidatePath } from "next/cache"
+import { log } from "console"
+
+// Calculate Cart Prices
+const calculateCartPrices = (items: CartItem[]) => {
+    const itemsPrice = roundTwoDecimalPlaces(items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)),
+        shippingPrice = roundTwoDecimalPlaces(itemsPrice > 100 ? 0 : 10),
+        taxPrice = roundTwoDecimalPlaces(itemsPrice * 0.15),
+        totalPrice = roundTwoDecimalPlaces(itemsPrice + shippingPrice + taxPrice)
+
+    return {
+        itemsPrice: itemsPrice.toFixed(2),
+        shippingPrice: shippingPrice.toFixed(2),
+        taxPrice: taxPrice.toFixed(2),
+        totalPrice: totalPrice.toFixed(2)
+    }
+
+}
 
 export async function AddItemToCart(data: CartItem) {
 
@@ -17,6 +35,10 @@ export async function AddItemToCart(data: CartItem) {
         // Get the user id & session
         const session = await auth()
         const userId = session?.user?.id ? (session.user.id as string) : undefined
+        console.log('User ID:', userId);
+        console.log('Session:', session);
+        
+        
 
         // Get cart
         const cart = await getMyCart();
@@ -29,25 +51,66 @@ export async function AddItemToCart(data: CartItem) {
             where: { id: item.comicId }
         })
 
+        if (!comic) throw new Error('Comic not found')
 
-        // Testing 
-        console.log({
-            'sessionCartId': sessionCartId,
-            'userId': userId,
-            'item requested': item,
-            'comic': comic
-        });
+        if (!cart) {
+            // Create new cart
+            const newCart = insertCartSchema.parse({
+                userId: userId,
+                items: [item],
+                sessionCartId: sessionCartId,
+                ...calculateCartPrices([item])
+            })
+
+            // Testing 
+            console.log('Cart:', newCart);
+
+            // Save cart to the database
+            await prisma.cart.create({
+                data: newCart
+            })
+
+            // Revalidate the page 
+            revalidatePath(`/comic/${comic.slug}`)
+
+            return {
+                success: true,
+                message: `${comic.name} added to cart`
+
+            }
 
 
-        return {
-            success: true,
-            message: 'Item added to cart'
+        } else {
+            // Update existing cart
+            const updatedCart = {
+                ...cart,
+                items: [...cart.items, item],
+                ...calculateCartPrices([...cart.items, item])
+            }
 
+            // Testing 
+            console.log('Cart:', updatedCart);
+
+            // Save cart to the database
+            await prisma.cart.update({
+                where: { id: cart.id },
+                data: updatedCart
+            })
+
+            // Revalidate the page 
+            revalidatePath(`/comic/${comic.slug}`)
+
+            return {
+                success: true,
+                message: 'Item added to cart'
+
+            }
         }
+
     } catch (error) {
         return {
             success: false,
-            message: 'Item not added to cart'
+            message: formatErrors(error)
         }
 
     }
