@@ -17,7 +17,7 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     const res = await AddItemToCart(item)
     if (!res.success) {
       toast.error(res.message, {
-        
+
         className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
         description: 'Please try again',
         duration: 3000,
@@ -25,7 +25,7 @@ const AddToCart = ({ item }: { item: CartItem }) => {
       return;
     }
 
-    toast.success(`${item.name} added to cart`, {
+    toast.success(res.message, {
       className: 'rounded-lg border-2 border-emerald-200 bg-emerald-50 text-emerald-800 shadow-lg',
       duration: 3000,
       action: {

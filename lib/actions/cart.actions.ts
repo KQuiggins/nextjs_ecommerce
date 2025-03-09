@@ -8,6 +8,7 @@ import { formatErrors, roundTwoDecimalPlaces, toJavaScriptObject } from "../util
 import { cartItemSchema, insertCartSchema } from "../validators"
 import { revalidatePath } from "next/cache"
 import { log } from "console"
+import { Prisma } from "@prisma/client"
 
 // Calculate Cart Prices
 const calculateCartPrices = (items: CartItem[]) => {
@@ -35,10 +36,10 @@ export async function AddItemToCart(data: CartItem) {
         // Get the user id & session
         const session = await auth()
         const userId = session?.user?.id ? (session.user.id as string) : undefined
-        console.log('User ID:', userId);
-        console.log('Session:', session);
-        
-        
+        // console.log('User ID:', userId);
+        // console.log('Session:', session);
+
+
 
         // Get cart
         const cart = await getMyCart();
@@ -81,20 +82,35 @@ export async function AddItemToCart(data: CartItem) {
 
 
         } else {
-            // Update existing cart
-            const updatedCart = {
-                ...cart,
-                items: [...cart.items, item],
-                ...calculateCartPrices([...cart.items, item])
+            // Check if item already exists in the cart
+            const existingItem = (cart.items as CartItem[]).find(i => i.comicId === item.comicId)
+
+            if (existingItem) {
+                // Check the stock
+                if (comic.stock < existingItem.qty + 1) {
+                    throw new Error('Not enough stock')
+                }
+
+                // Increase the quantity
+                (cart.items as CartItem[]).find(i => i.comicId === item.comicId)!.qty = existingItem.qty + 1
+            } else {
+                // If item does not exist in the cart
+                // Check the stock
+                if (comic.stock < 1) {
+                    throw new Error('Not enough stock')
+                }
+
+                // Add item to the cart
+                cart.items.push(item)
             }
-
-            // Testing 
-            console.log('Cart:', updatedCart);
-
             // Save cart to the database
             await prisma.cart.update({
                 where: { id: cart.id },
-                data: updatedCart
+                data: {
+                    items: cart.items as Prisma.CartUpdateitemsInput[],
+                    ...calculateCartPrices(cart.items as CartItem[])
+
+                }
             })
 
             // Revalidate the page 
@@ -102,7 +118,7 @@ export async function AddItemToCart(data: CartItem) {
 
             return {
                 success: true,
-                message: 'Item added to cart'
+                message: `${comic.name} ${existingItem ? 'updated in' : 'added to'} cart`
 
             }
         }
