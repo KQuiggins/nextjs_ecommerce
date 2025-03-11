@@ -159,3 +159,61 @@ export async function getMyCart() {
 
     })
 }
+
+export async function removeItemFromCart(comicId: string) {
+    try {
+        // Get the user id & session
+        const sessionCartId = (await cookies()).get('sessionCartId')?.value
+        if (!sessionCartId) throw new Error('No session cart id found')
+
+        // Get Comic
+        const comic = await prisma.comic.findUnique({
+            where: { id: comicId }
+        })
+        if (!comic) throw new Error('Comic not found')
+
+        // Get cart
+        const cart = await getMyCart()
+        if (!cart) throw new Error('Cart not found')
+
+        // Check for the item 
+        const itemExist = (cart.items as CartItem[]).find(i => i.comicId === comicId)
+        if (!itemExist) throw new Error('Item not found')
+
+        // Check the quantity
+        if (itemExist.qty === 1) {
+            // Remove the item from the cart
+            cart.items = (cart.items as CartItem[]).filter(i => i.comicId !== itemExist.comicId)
+        } else {
+            // Decrease the quantity
+            (cart.items as CartItem[]).find(i => i.comicId === comicId)!.qty = itemExist.qty - 1
+        }
+
+        // Save cart to the database
+        await prisma.cart.update({
+            where: { id: cart.id },
+            data: {
+                items: cart.items as Prisma.CartUpdateitemsInput[],
+                ...calculateCartPrices(cart.items as CartItem[])
+            }
+        })
+
+        // Revalidate the page
+        revalidatePath(`/comic/${comic.slug}`)
+
+
+
+
+
+        return {
+            success: true,
+            message: `${comic.name} removed from cart`
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            message: formatErrors(error)
+        }
+    }
+}

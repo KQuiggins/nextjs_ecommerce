@@ -6,6 +6,7 @@ import { notFound } from "next/navigation"
 import ComicPrice from "@/components/shared/comics/comic-price"
 import ComicImages from "@/components/shared/comics/comic-images"
 import AddToCart from "@/components/shared/comics/add-to-cart"
+import { getMyCart } from "@/lib/actions/cart.actions"
 
 const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) => {
   const { slug } = await props.params
@@ -16,6 +17,9 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
   if (!comic) {
     notFound()
   }
+
+  const cart = await getMyCart()
+
   return (
     <section>
       <div className="grid grid-cols-1 md:grid-cols-5">
@@ -57,15 +61,21 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
               </div>
               {comic.stock > 0 && (
                 <div className="flex-center">
-                  <AddToCart item={{
-                    comicId: comic.id,
-                    name: comic.name,
-                    slug: comic.slug,
-                    price: comic.price,
-                    qty: 1,
-                    image: comic.images![0],
+                  <AddToCart
+                  
+                    cart={cart}
+                  
+                    item={{
+                      comicId: comic.id,
+                      name: comic.name,
+                      slug: comic.slug,
+                      price: comic.price,
+                      qty: 1,
+                      image: comic.images![0],
 
-                  }} />
+                    }} 
+                    
+                  />
                 </div>
               )}
             </CardContent>
