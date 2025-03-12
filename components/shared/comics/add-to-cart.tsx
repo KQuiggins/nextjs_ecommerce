@@ -16,24 +16,25 @@ const AddToCart = ({ cart, item }: { cart?: Cart, item: CartItem }) => {
   const router = useRouter()
 
   const handleAddToCart = async () => {
-    const res = await AddItemToCart(item)
-    if (!res.success) {
-      toast.error(res.message, {
+    startTransition(async () => {
+      const res = await AddItemToCart(item)
+      if (!res.success) {
+        toast.error(res.message, {
+          className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+          description: 'Please try again',
+          duration: 3000,
+        })
+        return;
+      }
 
-        className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
-        description: 'Please try again',
+      toast.success(res.message, {
+        className: 'rounded-lg border-2 border-emerald-200 bg-emerald-50 text-emerald-800 shadow-lg',
         duration: 3000,
-      })
-      return;
-    }
-
-    toast.success(res.message, {
-      className: 'rounded-lg border-2 border-emerald-200 bg-emerald-50 text-emerald-800 shadow-lg',
-      duration: 3000,
-      action: {
-        label: 'Go to Cart',
-        onClick: () => router.push('/cart')
-      },
+        action: {
+          label: 'Go to Cart',
+          onClick: () => router.push('/cart')
+        },
+      });
     });
   }
 
