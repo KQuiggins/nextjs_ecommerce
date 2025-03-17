@@ -7,7 +7,6 @@ import { prisma } from "@/db/prisma"
 import { formatErrors, roundTwoDecimalPlaces, toJavaScriptObject } from "../utils"
 import { cartItemSchema, insertCartSchema } from "../validators"
 import { revalidatePath } from "next/cache"
-import { log } from "console"
 import { Prisma } from "@prisma/client"
 
 // Calculate Cart Prices

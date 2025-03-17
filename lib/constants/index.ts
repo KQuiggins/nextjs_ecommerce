@@ -14,3 +14,11 @@ export const signUpDefaultValues = {
     password: "",
     confirmPassword: ""
 };
+
+export const shippingAddressDefaultValues = {
+    fullName: "John Doe",
+    address: "123 Fake St",
+    city: "Springfield",
+    postalCode: "12345",
+    country: "USA"
+};
