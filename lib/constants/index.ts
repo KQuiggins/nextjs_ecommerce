@@ -16,9 +16,9 @@ export const signUpDefaultValues = {
 };
 
 export const shippingAddressDefaultValues = {
-    fullName: "John Doe",
-    address: "123 Fake St",
-    city: "Springfield",
-    postalCode: "12345",
-    country: "USA"
+    fullName: "",
+    address: "",
+    city: "",
+    postalCode: "",
+    country: ""
 };
