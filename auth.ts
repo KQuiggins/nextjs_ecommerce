@@ -1,4 +1,5 @@
 import NextAuth from 'next-auth'
+import { authConfig } from './auth.config';
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './db/prisma'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -57,6 +58,7 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async session({ session, token, trigger, user }: any) {
       // Set the user ID from the token
       session.user.id = token.sub
@@ -117,34 +119,7 @@ export const config = {
       }
       return token
     },
-    authorized({ request, auth }: any) {
 
-      // Check for session cart cookie
-      if (!request.cookies.get('sessionCartId')) {
-
-        // Generate new session cart cookie
-        const sessionCartId = crypto.randomUUID()
-        console.log('sessionCartId', sessionCartId)
-
-        // clone the rquest headers
-        const newRequestHeaders = new Headers(request.headers)
-
-        // Crate a new response and add the headers
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders
-          }
-        })
-
-        // Set newly generated session cart cookie in the response
-        response.cookies.set('sessionCartId', sessionCartId)
-        
-        return response;
-
-      } else {
-        return true;
-      }
-    },
   }
 } satisfies NextAuthConfig
 
