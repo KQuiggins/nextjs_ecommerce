@@ -106,7 +106,7 @@ export async function updateUserAddress(data: ShippingAddress) {
   }
 
   // update user's payment method
-  async function updateUserPaymentMethod(data: z.infer<typeof paymentMethodSchema>) {
+  export async function updateUserPaymentMethod(data: z.infer<typeof paymentMethodSchema>) {
     try {
         const session = await auth();
 
