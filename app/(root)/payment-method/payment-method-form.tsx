@@ -19,28 +19,31 @@ const PaymentMethodForm = ({ preferredPaymentMethod }: { preferredPaymentMethod:
     const form = useForm<z.infer<typeof paymentMethodSchema>>({
         resolver: zodResolver(paymentMethodSchema),
         defaultValues: {
-          type: preferredPaymentMethod || DEFAULT_PAYMENT_METHOD,
+            type: preferredPaymentMethod || DEFAULT_PAYMENT_METHOD,
         },
-      });
-    
-      const [isPending, startTransition] = useTransition();
-    
-      const onSubmit = async (values: z.infer<typeof paymentMethodSchema>) => {
+    });
+
+    const [isPending, startTransition] = useTransition();
+
+    const onSubmit = async (values: z.infer<typeof paymentMethodSchema>) => {
         startTransition(async () => {
-          const res = await updateUserPaymentMethod(values);
-    
-          if (!res.success) {
-            toast({
-              variant: 'destructive',
-              description: res.message,
-            });
-            return;
-          }
-    
-          router.push('/place-order');
+            const res = await updateUserPaymentMethod(values);
+
+            if (!res.success) {
+                toast.error(res.message, {
+                    className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+                    description: 'Please try again',
+                    duration: 3000,
+                });
+                return;
+            }
+
+            
+
+            router.push('/place-order');
         });
-      };
-    
+    };
+
 
     return (
 
@@ -74,7 +77,7 @@ const PaymentMethodForm = ({ preferredPaymentMethod }: { preferredPaymentMethod:
                                             <RadioGroup
                                                 onValueChange={field.onChange}
                                                 className='flex flex-col space-y-2'
-                                                
+
                                             >
                                                 {PAYMENT_METHODS.map((paymentMethod) => (
                                                     <FormItem
