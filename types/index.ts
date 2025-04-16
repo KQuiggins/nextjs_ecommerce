@@ -1,11 +1,12 @@
 import { z } from "zod";
-import { 
-    insertComicSchema, 
-    cartItemSchema, 
+import {
+    insertComicSchema,
+    cartItemSchema,
     insertCartSchema,
     shippingAddressSchema,
     insertOrderItemSchema,
     insertOrderSchema,
+    paymentResultSchema
 } from "../lib/validators";
 
 export type Comic = z.infer<typeof insertComicSchema> & {
@@ -28,7 +29,8 @@ export type Order = z.infer<typeof insertOrderSchema> & {
   deliveredAt: Date | null;
   orderitems: OrderItem[];
   user: { name: string; email: string };
-  
+
 };
+export type PaymentResult = z.infer<typeof paymentResultSchema>;
 
 

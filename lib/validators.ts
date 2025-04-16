@@ -4,7 +4,7 @@ import { PAYMENT_METHODS } from "./constants";
 
 const currency = z.string().refine((value) => /^\d+(\.\d{2})?$/.test(formatDecimal(Number(value))), 'Price have exactly 2 decimal places')
 
-// Insering Comics Schema
+// Inserting Comics Schema
 export const insertComicSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters long"),
     slug: z.string().min(3, "Slug must be at least 3 characters long"),
@@ -16,7 +16,7 @@ export const insertComicSchema = z.object({
     isFeatured: z.boolean(),
     banner: z.string().nullable(),
     price: currency,
-    
+
 });
 
 // Schema for signing in
@@ -31,7 +31,7 @@ export const signUpFormSchema = z.object({
     email: z.string().email("Invalid email address"),
     password: z.string().min(6, "Password must be at least 6 characters long"),
     confirmPassword: z.string().min(6, "Password must be at least 6 characters long")
-      
+
   }).refine((val) => val.password === val.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
@@ -45,7 +45,7 @@ export const signUpFormSchema = z.object({
     qty: z.number().int().nonnegative("Quantity must be a positive integer"),
     image: z.string().min(1, "Image must be at least 1 characters long"),
     price: currency,
-    
+
   });
 
   export const insertCartSchema = z.object({
@@ -77,7 +77,7 @@ export const paymentMethodSchema = z.object({
     message: "Invalid payment method",
 })
 
-// Schema for insering an order
+// Schema for inserting an order
 export const insertOrderSchema = z.object({
   userId: z.string().min(1, 'User is required'),
   itemsPrice: currency,
@@ -99,4 +99,12 @@ export const insertOrderItemSchema = z.object({
   price: currency,
   qty: z.number(),
 });
-  
+
+// Payment results schema
+export const paymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.string(),
+});
+
