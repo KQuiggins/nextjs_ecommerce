@@ -27,7 +27,7 @@ export async function createOrderAction() {
             return { success: false, message: "Cart is empty", redirectTo: "/cart" };
         }
         if (!user.address) {
-            return { success: false, message: "No shipping adress", redirectTo: "/heroes-address" };
+            return { success: false, message: "No shipping address", redirectTo: "/heroes-address" };
         }
         if (!user.paymentMethod) {
             return { success: false, message: "No payment method", redirectTo: "/payment-method" };

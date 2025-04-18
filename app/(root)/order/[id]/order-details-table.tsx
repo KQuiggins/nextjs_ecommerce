@@ -1,16 +1,19 @@
 'use client'
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card';
 import { TableCell } from '@/components/ui/table';
-import { formatCurrency, formatDateTime, shortenUUID } from '@/lib/utils'
-import { Order } from '@/types'
+import { toast } from "sonner"
+import { formatCurrency, formatDateTime, shortenUUID } from '@/lib/utils';
+import { Order } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import { createPayPalOrder, approvePayPalOrder } from '@/lib/actions/order.actions';
 
 
-const OrderDetailsTable = ({ order }: { order: Order }) => {
+const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClientId: string }) => {
 
   const {
     id,
@@ -27,6 +30,49 @@ const OrderDetailsTable = ({ order }: { order: Order }) => {
     deliveredAt,
   } = order
 
+  const PrintLoadingState = () => {
+    const [{ isPending, isRejected}] = usePayPalScriptReducer();
+    let status = '';
+
+    if (isPending) {
+      status = 'Loading PayPal...';
+    } else if (isRejected) {
+      status = 'PayPal failed to load';
+    }
+    return status;
+
+  }
+
+  const handleCreateOrder = async (data: any, actions: any) => {
+    const orderData = await createPayPalOrder(order.id);
+
+    if (!orderData.success) {
+      toast.error(orderData.message, {
+        className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+        description: 'Please try again',
+        duration: 3000,
+      });
+    }
+    return orderData.data;
+  }
+
+  const handleApprovePayPalOrder = async (data: {orderID: string; }) => {
+    const orderData = await approvePayPalOrder(order.id, data);
+
+    if (!orderData.success) {
+      toast.error(orderData.message, {
+        className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+        description: 'Please try again',
+        duration: 3000,
+      });
+    } else {
+      toast.success('Order Paid', {
+        className: 'rounded-lg border-2 border-green-200 bg-green-200 text-green-800 shadow-lg',
+        description: 'Thank you for your order',
+        duration: 3000,
+      });
+    }
+  }
 
   return (
     <>
@@ -126,7 +172,18 @@ const OrderDetailsTable = ({ order }: { order: Order }) => {
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
-
+                  { /* PayPal Payment */}
+                  { !isPaid && paymentMethod === 'PayPal' && (
+                    <div>
+                      <PayPalScriptProvider options={{clientId: paypalClientId}}>
+                        <PrintLoadingState />
+                        <PayPalButtons
+                          createOrder={handleCreateOrder}
+                          onApprove={handleApprovePayPalOrder}
+                        />
+                      </PayPalScriptProvider>
+                    </div>
+                  )}
             </CardContent>
           </Card>
         </div>
