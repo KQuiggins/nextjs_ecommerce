@@ -33,7 +33,7 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
             <p>{comic.brand} {comic.category}</p>
             <h1 className="h3-bold">{comic.name}</h1>
             <p>{comic.rating} of {comic.numReviews}</p>
-            <div className="flex flex-col sm:flex-row sm:iems-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <ComicPrice value={Number(comic.price)} className="w-24 rounded-full bg-green-100 text-green-700 px-5 py-2" />
 
             </div>
@@ -62,9 +62,9 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
               {comic.stock > 0 && (
                 <div className="flex-center">
                   <AddToCart
-                  
+
                     cart={cart}
-                  
+
                     item={{
                       comicId: comic.id,
                       name: comic.name,
@@ -73,8 +73,8 @@ const ComicDetailsPage = async (props: { params: Promise<{ slug: string }> }) =>
                       qty: 1,
                       image: comic.images![0],
 
-                    }} 
-                    
+                    }}
+
                   />
                 </div>
               )}
