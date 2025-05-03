@@ -3,6 +3,7 @@ import { getOrdersForUser } from '@/lib/actions/order.actions'
 import { formatCurrency, formatDateTime, shortenUUID } from '@/lib/utils'
 import Link from 'next/link'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import PaginationPage from '@/components/shared/pagination'
 
 export const metadata: Metadata = {
   title: 'My Orders',
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
 
 const OrdersPage = async (props: {
   searchParams: Promise<{
-    page: string}>
+    page: string
+  }>
 }) => {
 
   const { page } = await props.searchParams
@@ -21,7 +23,7 @@ const OrdersPage = async (props: {
 
   })
 
-  
+
 
   return (
     <div className='space-y-2'>
@@ -57,6 +59,11 @@ const OrdersPage = async (props: {
             ))}
           </TableBody>
         </Table>
+        {orders.totalPages > 1 && (
+
+          <PaginationPage page={Number(page || 1)} totalPages={orders?.totalPages} />
+
+        )}
       </div>
     </div>
   )
