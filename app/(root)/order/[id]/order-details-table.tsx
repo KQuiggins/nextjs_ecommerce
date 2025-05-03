@@ -18,13 +18,11 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
   const {
     id,
     shippingAddress,
-    orderitems,
     itemsPrice,
     shippingPrice,
     taxPrice,
     totalPrice,
     paymentMethod,
-    isDelivered,
     isPaid,
     paidAt,
     deliveredAt,
@@ -43,7 +41,7 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
 
   }
 
-  const handleCreateOrder = async (data: any, actions: any) => {
+  const handleCreateOrder = async () => {
     const orderData = await createPayPalOrder(order.id);
 
     if (!orderData.success) {

@@ -7,7 +7,7 @@ import { getMyCart } from "./cart.actions";
 import { getUserById } from "./user.actions";
 import { insertOrderSchema } from "../validators";
 import { prisma } from "@/db/prisma";
-import { CartItem, PaymentResult, ShippingAddress } from "@/types";
+import { CartItem, PaymentResult } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
@@ -255,14 +255,14 @@ async function updateOrderToPaid({
     if (!session) throw new Error("User is not authorized");
 
     const data = await prisma.order.findMany({
-      where: { userId: session?.user?.id! },
+      where: { userId: session?.user?.id },
       orderBy: { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit
   })
 
   const dataCount = await prisma.order.count({
-    where: { userId: session?.user?.id! },
+    where: { userId: session?.user?.id },
   })
 
   return {

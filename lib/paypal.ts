@@ -1,4 +1,4 @@
-import { create } from "domain";
+
 
 const base = process.env.PAYPAL_API_URL || 'https://api-m.sandbox.paypal.com';
 
@@ -60,10 +60,10 @@ async function generateAccessToken() {
         }
     });
 
-    
+
         const jsonData = await handleResponse(response);
         return jsonData.access_token;
-   
+
 }
 
 async function handleResponse(response: Response) {
