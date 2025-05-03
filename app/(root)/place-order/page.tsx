@@ -19,13 +19,14 @@ import {
 import Image from 'next/image';
 import { formatCurrency } from '@/lib/utils';
 import PlaceOrderForm from './place-order-form';
+import { Cart } from '@/types';
 
 export const metadata: Metadata = {
   title: 'Place Order',
 };
 
 const PlaceOrderPage = async () => {
-  const cart = await getMyCart();
+  const cart: Cart = await getMyCart();
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -89,7 +90,7 @@ const PlaceOrderPage = async () => {
                     <TableRow key={item.slug}>
                       <TableCell>
                         <Link
-                          href={`/product/{item.slug}`}
+                          href={`/product/${item.slug}`}
                           className='flex items-center'
                         >
                           <Image
