@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { getMyCart } from '@/lib/actions/cart.actions';
 import { getUserById } from '@/lib/actions/user.actions';
-import { ShippingAddress } from '@/types';
+import { CartItem, ShippingAddress } from '@/types';
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import CheckoutSteps from '@/components/shared/checkout-steps';
@@ -86,7 +86,7 @@ const PlaceOrderPage = async () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {cart.items.map((item) => (
+                  {cart.items.map((item: CartItem) => (
                     <TableRow key={item.slug}>
                       <TableCell>
                         <Link
