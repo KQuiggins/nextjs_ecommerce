@@ -38,7 +38,7 @@ export async function signInWithCredentials(
 
 // Sign out user
 export async function signOutUser() {
-  
+
   const currentCart = await getMyCart();
 
   if (currentCart?.id) {
@@ -159,7 +159,7 @@ export async function updateUserProfile(user: { name: string; email: string }) {
 
     if (!currentUser) throw new Error("User not found");
 
-    const updatedUser = await prisma.user.update({
+   await prisma.user.update({
       where: { id: currentUser.id },
       data: { name: user.name },
     });

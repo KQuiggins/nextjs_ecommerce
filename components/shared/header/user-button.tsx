@@ -90,7 +90,7 @@ const UserButton = async () => {
                             <>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
-                                    <Link href="/admin/dashboard" className="w-full">
+                                    <Link href="/admin/overview" className="w-full">
                                         Admin Dashboard
                                     </Link>
                                 </DropdownMenuItem>
