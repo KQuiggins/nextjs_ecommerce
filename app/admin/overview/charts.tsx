@@ -21,7 +21,7 @@ const Charts = ({
           fontSize={12}
           tickLine={false}
           axisLine={false}
-          tickFormatter={(value: any) => `$${value}`}
+          tickFormatter={(value) => `$${value}`}
         />
         <Bar
           dataKey='totalSales'
