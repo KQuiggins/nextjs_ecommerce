@@ -36,7 +36,7 @@ export function formatErrors(error: any) {
   }
 }
 
-// Round number to 2 decimal places 
+// Round number to 2 decimal places
 export function roundTwoDecimalPlaces(value: number | string) {
   if (typeof value === 'number') {
    return Math.round((value + Number.EPSILON) * 100) / 100
@@ -45,7 +45,7 @@ export function roundTwoDecimalPlaces(value: number | string) {
   } else {
     throw new Error('Invalid value')
   }
-  
+
 }
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
@@ -63,6 +63,13 @@ export function formatCurrency(amount: number | string | null) {
   } else {
     return 'NaN';
   }
+}
+
+// Format Number
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US');
+
+export function formatNumber(number: number) {
+  return NUMBER_FORMATTER.format(number);
 }
 
 // Shorten UUID
