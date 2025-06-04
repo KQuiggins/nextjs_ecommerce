@@ -5,6 +5,7 @@ import { getAllOrders } from "@/lib/actions/order.actions"
 import { shortenUUID, formatDateTime, formatCurrency } from "@/lib/utils"
 import Link from "next/link"
 import { Metadata } from "next"
+import { Button } from "@/components/ui/button"
 
 export const metadata: Metadata = {
   title: 'Admin Orders | Comic Store',
@@ -12,21 +13,22 @@ export const metadata: Metadata = {
 }
 
 const AdminOrdersPage = async (props: {
-    searchParams: Promise<{
-      page: string;}>
+  searchParams: Promise<{
+    page: string;
+  }>
 }) => {
 
-    const { page = '1'} = await props.searchParams;
-    const session = await auth();
+  const { page = '1' } = await props.searchParams;
+  const session = await auth();
 
-    if (session?.user?.role !== 'admin') throw new Error("Unauthorized access to admin orders page");
+  if (session?.user?.role !== 'admin') throw new Error("Unauthorized access to admin orders page");
 
-    const orders = await getAllOrders({
-        page: Number(page),
-        limit: 2
-    });
+  const orders = await getAllOrders({
+    page: Number(page),
+    limit: 2
+  });
 
-    console.log("Orders:", orders);
+  console.log("Orders:", orders);
 
   return (
     <div className='space-y-6'>
@@ -137,9 +139,10 @@ const AdminOrdersPage = async (props: {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Link
-                      href={`/user/orders/${order.id}`}
-                      className="
+                    <Button>
+                      <Link
+                        href={`/order/${order.id}`}
+                        className="
                         inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600
                         text-white font-bold rounded border-2 border-black
                         shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
@@ -147,10 +150,11 @@ const AdminOrdersPage = async (props: {
                         hover:translate-x-[2px] hover:translate-y-[2px]
                         transition-all duration-150
                       "
-                      style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}
-                    >
-                      🔍 VIEW MISSION
-                    </Link>
+                        style={{ fontFamily: '"Comic Sans MS", cursive, sans-serif' }}
+                      >
+                        🔍 VIEW MISSION
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
