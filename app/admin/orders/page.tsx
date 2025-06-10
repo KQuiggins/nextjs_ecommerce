@@ -1,11 +1,12 @@
 import { auth } from "@/auth"
 import PaginationPage from "@/components/shared/pagination"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { getAllOrders } from "@/lib/actions/order.actions"
+import { deleteOrder, getAllOrders } from "@/lib/actions/order.actions"
 import { shortenUUID, formatDateTime, formatCurrency } from "@/lib/utils"
 import Link from "next/link"
 import { Metadata } from "next"
 import { Button } from "@/components/ui/button"
+import DeleteDialog from "@/components/shared/delete-dialog"
 
 export const metadata: Metadata = {
   title: 'Admin Orders | Comic Store',
@@ -36,7 +37,7 @@ const AdminOrdersPage = async (props: {
         className="text-4xl font-bold tracking-tight text-center mb-8"
         style={{
           fontFamily: '"Bangers", cursive, sans-serif',
-          textShadow: '3px 3px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000',
+          textShadow: '3px 3px 0px #333, -1px -1px 0px #333, 1px -1px 0px #333, -1px 1px 0px #333',
           background: 'linear-gradient(45deg, #ff6b35, #f7931e)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
@@ -155,6 +156,7 @@ const AdminOrdersPage = async (props: {
                         🔍 VIEW MISSION
                       </Link>
                     </Button>
+                      <DeleteDialog id={order.id} action={deleteOrder}/>
                   </TableCell>
                 </TableRow>
               ))}
