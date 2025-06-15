@@ -2,7 +2,7 @@
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button';
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '../ui/alert-dialog';
 
 
 function DeleteDialog({ id, action}: {
@@ -11,6 +11,18 @@ function DeleteDialog({ id, action}: {
 }) {
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleDelete = async () => {
+    startTransition(async () => {
+      const result = await action(id);
+      if (!result.success) {
+        toast.error(result.message);
+      } else {
+        setIsOpen(false);
+        toast.success(result.message);
+      }
+    });
+  }
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger asChild>
@@ -28,7 +40,24 @@ function DeleteDialog({ id, action}: {
           <AlertDialogTitle>
             Are you sure you want to delete this item?
           </AlertDialogTitle>
+          <AlertDialogDescription>
+            This action is permanent and cannot be undone!
+          </AlertDialogDescription>
         </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>
+            Cancel
+          </AlertDialogCancel>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+            disabled={isPending}
+
+          >
+            {isPending ? 'Deleting...' : 'Delete'}
+          </Button>
+        </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
