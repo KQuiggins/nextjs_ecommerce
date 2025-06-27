@@ -9,11 +9,14 @@ import { Order } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { useTransition } from 'react';
 import { PayPalButtons, PayPalScriptProvider, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { createPayPalOrder, approvePayPalOrder } from '@/lib/actions/order.actions';
+import { createPayPalOrder, approvePayPalOrder, updateOrderToPaidCOD, updateOrderToDelivered } from '@/lib/actions/order.actions';
 
 
-const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClientId: string }) => {
+
+const OrderDetailsTable = ({ order, paypalClientId, isAdmin }: { order: Order, paypalClientId: string, isAdmin: boolean }) => {
 
   const {
     id,
@@ -24,6 +27,7 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
     totalPrice,
     paymentMethod,
     isPaid,
+    isDelivered,
     paidAt,
     deliveredAt,
   } = order
@@ -71,6 +75,69 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
       });
     }
   }
+
+  const MarkAsPaidButton = () => {
+    const [isPending, startTransition] = useTransition();
+
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToPaidCOD(order.id);
+            if (res.success) {
+              toast.success('Order marked as paid', {
+                className: 'rounded-lg border-2 border-green-200 bg-green-200 text-green-800 shadow-lg',
+                description: 'Thank you for your order',
+                duration: 3000,
+              });
+            } else {
+              toast.error(res.message, {
+                className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+                description: 'Please try again',
+                duration: 3000,
+              });
+            }
+          })
+        }
+      >
+        {isPending ? 'processing...' : 'Mark As Paid'}
+      </Button>
+    );
+  };
+
+  // Button to mark order as delivered
+  const MarkAsDeliveredButton = () => {
+    const [isPending, startTransition] = useTransition();
+
+    return (
+      <Button
+        type='button'
+        disabled={isPending}
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToDelivered(order.id);
+            if (res.success) {
+              toast.success('Order marked as delivered', {
+                className: 'rounded-lg border-2 border-green-200 bg-green-200 text-green-800 shadow-lg',
+                description: 'Order has been delivered',
+                duration: 3000,
+              });
+            } else {
+              toast.error(res.message, {
+                className: 'rounded-lg border-2 border-red-200 bg-red-200 text-red-800 shadow-lg',
+                description: 'Please try again',
+                duration: 3000,
+              });
+            }
+          })
+        }
+      >
+        {isPending ? 'processing...' : 'Mark As Delivered'}
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -182,6 +249,17 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
                       </PayPalScriptProvider>
                     </div>
                   )}
+                  { /* COD Payment */}
+                  {
+                    isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
+                      <MarkAsPaidButton />
+                    )
+                  }
+                  {
+                    isAdmin && isPaid && !isDelivered && (
+                      <MarkAsDeliveredButton />
+                    )
+                  }
             </CardContent>
           </Card>
         </div>
@@ -191,3 +269,6 @@ const OrderDetailsTable = ({ order, paypalClientId }: { order: Order, paypalClie
 }
 
 export default OrderDetailsTable
+
+
+

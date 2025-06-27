@@ -355,7 +355,7 @@ export async function getAllOrders({
 // Delete an Order
 export async function deleteOrder(id: string) {
   try {
-    await prisma.order.delete({where: { id }});
+    await prisma.order.delete({ where: { id } });
     // Revalidate the path to update the cache
     revalidatePath("/admin/orders");
 
@@ -381,7 +381,7 @@ export async function updateOrderToPaidCOD(orderId: string) {
 }
 
 // update COD to delivered
-async function updateOrderToDelivered(orderId: string) {
+export async function updateOrderToDelivered(orderId: string) {
   try {
     const order = await prisma.order.findFirst({
       where: { id: orderId },
@@ -389,7 +389,7 @@ async function updateOrderToDelivered(orderId: string) {
 
     if (!order) throw new Error("Order not found");
 
-    if (order.isPaid) throw new Error("Order has not been paid for");
+    if (!order.isPaid) throw new Error("Order has not been paid for");
 
     // Update order to delivered
     await prisma.order.update({
