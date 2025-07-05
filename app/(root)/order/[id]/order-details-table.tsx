@@ -166,9 +166,9 @@ const OrderDetailsTable = ({ order, paypalClientId, isAdmin }: { order: Order, p
               <p>{shippingAddress.address}, {shippingAddress.city}
                 {shippingAddress.postalCode}, {shippingAddress.country}
               </p>
-              {isPaid ? (
+              {isDelivered ? (
                 <Badge variant="secondary" >
-                  Paid At: {formatDateTime(deliveredAt!).dateTime}
+                  Delivered At: {formatDateTime(deliveredAt!).dateTime}
                 </Badge>
               ) : (
                 <Badge variant="destructive" >
