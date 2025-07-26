@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { getAllComics } from "@/lib/actions/comic.actions";
+import { getAllComics, deleteComic } from "@/lib/actions/comic.actions";
 import { formatCurrency, shortenUUID } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Pagination from "@/components/shared/pagination";
+import DeleteDialog from "@/components/shared/delete-dialog";
 
 const AdminComicsPage = async (props: {
   searchParams: Promise<{
@@ -63,7 +64,10 @@ const AdminComicsPage = async (props: {
                 <Button asChild variant='ghost' size='icon'>
                   <Link href={`/admin/comics/${comic.id}`}>Edit</Link>
                 </Button>
-                {/* Uncomment if you want to add a delete button */}
+                <DeleteDialog
+                  id={comic.id}
+                  action={deleteComic}
+                />
               </TableCell>
             </TableRow>
           ))}

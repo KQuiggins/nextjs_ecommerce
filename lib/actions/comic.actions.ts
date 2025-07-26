@@ -1,8 +1,9 @@
 "use server";
 
 import { prisma } from "@/db/prisma";
-import { toJavaScriptObject } from "@/lib/utils";
+import { formatErrors, toJavaScriptObject } from "@/lib/utils";
 import { LATEST_COMICS_LIMIT, PAGE_SIZE } from "../constants";
+import { revalidatePath } from "next/cache";
 
 // Get latest comics
 export async function getLatestComics() {
@@ -47,5 +48,33 @@ export async function getAllComics({
   return {
     data,
     totalPages: Math.ceil(dataCount / limit),
+  }
+}
+
+// Delete a comic
+export async function deleteComic(id: string) {
+  try {
+    const comicExist = await prisma.comic.findFirst({
+      where: { id }
+    })
+
+    if (!comicExist) throw new Error("Comic not found");
+
+    await prisma.comic.delete({
+      where: { id }
+    });
+
+    revalidatePath("/admin/comics");
+
+    return {
+      success: true,
+      message: "Comic deleted successfully"
+    }
+
+  } catch (error) {
+    return {
+      success: false,
+      message: formatErrors(error)
+    }
   }
 }
